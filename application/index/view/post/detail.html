@@ -1,0 +1,273 @@
+{extend name="layout" /}
+
+{block name="title"}{$post.title} - NewPHPer{/block}
+
+{block name="description"}{:seo_description($post.content)}{/block}
+
+{block name="style"}
+<style>
+    .layui-btn-danger {
+        background-color: #FF5722!important;
+    }
+    .appreciate{
+        text-align: center;
+        margin-top: 30px;
+    }
+    .appreciate .tips{
+        margin-top: 20px;
+        margin-bottom: 50px;
+        min-height: 24px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #969696;
+    }
+</style>
+{/block}
+
+{block name="main"}
+
+{include file="common/column" /}
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8 content detail">
+            <div class="fly-panel detail-box">
+                <h1>{$post.title}</h1>
+                <div class="fly-detail-info">
+                    <!-- <span class="layui-badge">审核中</span> -->
+                    <span class="layui-badge layui-bg-green fly-detail-column">{$column_name}</span>
+
+                    {eq name="post.solved" value="0"}
+                    <span class="layui-badge" style="background-color: #999;">未结</span>
+                    {else/}
+                    <span class="layui-badge" style="background-color: #5FB878;">已结</span>
+                    {/eq}
+                    {eq name="post.top" value="1"}
+                    <span class="layui-badge layui-bg-black">置顶</span>
+                    {/eq}
+                    {eq name="post.essence" value="1"}
+                    <span class="layui-badge layui-bg-red">精帖</span>
+                    {/eq}
+
+                    <div class="fly-admin-box" data-id="{$post.id}">
+                        <!--<span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>-->
+
+                        <!--<span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1">置顶</span>-->
+                        <!--&lt;!&ndash; <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span> &ndash;&gt;-->
+
+                        <!--<span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="1">加精</span>-->
+                        <!--&lt;!&ndash; <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span> &ndash;&gt;-->
+                    </div>
+                    <span class="fly-list-nums">
+            <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> {$post.reply}</a>
+            <i class="iconfont" title="人气">&#xe60b;</i> {$post.view}
+          </span>
+                </div>
+                <div class="detail-about">
+                    <a class="fly-avatar" href="{:url('user/home',['id'=>$author.id])}">
+                        <img src="{eq name='author.avatar' value='0'}/static/home/img/avatar/{$author.avatar_default}.png{else}{:get_file_path($author.avatar)}{/eq}" alt="{$author.nickname}">
+                    </a>
+                    <div class="fly-detail-user">
+                        <a href="{:url('user/home',['id'=>$author.id])}" class="fly-link">
+                            <cite>{$author.nickname}</cite>
+                            {neq name="$author.authentication" value=""}
+                            <i class="iconfont icon-renzheng" title="认证信息：{$author.authentication}"></i>
+                            {/neq}
+                            <!--<i class="layui-badge fly-badge-vip">VIP3</i>-->
+                        </a>
+                        <span>{:date('Y-m-d',$post.create_time)}</span>
+                    </div>
+                    <div class="detail-hits" id="LAY_jieAdmin" data-id="{$post.id}">
+                        <span style="padding-right: 10px; color: #FF7200">悬赏：{$post.reward}{:config('sns_score_name')}</span>
+                        {present name="user"}
+                        {eq name="$user.id" value="$post.user_id"}
+                        <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="{:url('post/edit',['id'=>$post.id])}">编辑此贴</a></span>
+                        {/eq}
+                        {/present}
+                    </div>
+                </div>
+                <div class="detail-body photos">
+                    {$post.content}
+                </div>
+                {if condition="$author.appreciate_code_status == 1 && $post.column_id == 2"}
+                <div class="appreciate">
+                    <button onclick="showCodeImg('{:get_file_path($author.appreciate_code)}')" class="layui-btn layui-btn-danger">赞赏支持作者</button>
+                    <p class="tips">如果作者的内容对你有帮助，小额赞赏能鼓励作者产出更优质的内容哦~</p>
+                </div>
+                {/if}
+            </div>
+
+            <div class="fly-panel detail-box" id="flyReply">
+                <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+                    <legend>回帖</legend>
+                </fieldset>
+
+                <ul class="jieda" id="jieda">
+                    {present name="reply"}
+                    {volist name="reply" id="r"}
+                    <li data-id="{$r.id}" id="item-{$r.id}" class="jieda-daan">
+                        <!--<a name="item-{$r.id}"></a>-->
+                        <div class="detail-about detail-about-reply">
+                            <a class="fly-avatar" href="{:url('user/home',['id'=>$r.user_id])}">
+                                <img src="{eq name='$r.avatar' value='0'}/static/home/img/avatar/{$r.avatar_default}.png{else/}{:get_file_path($r.avatar)}{/eq}" alt="{$r.nickname}">
+                            </a>
+                            <div class="fly-detail-user">
+                                <a href="{:url('user/home',['id'=>$r.user_id])}" class="fly-link">
+                                    <cite>{$r.nickname}</cite>
+                                    {neq name="$r.authentication" value=""}
+                                    <i class="iconfont icon-renzheng" title="认证信息：{$r.authentication}"></i>
+                                    {/neq}
+                                    <!--<i class="layui-badge fly-badge-vip">VIP3</i>-->
+                                </a>
+
+                                {eq name="$r.user_id" value="$post.user_id"}<span>(楼主)</span>{/eq}
+                                <!--
+                                <span style="color:#5FB878">(管理员)</span>
+                                <span style="color:#FF9E3F">（社区之光）</span>
+                                <span style="color:#999">（该号已被封）</span>
+                                -->
+                            </div>
+
+                            <div class="detail-hits">
+                                <span>{:date('Y-m-d',$r.time)}</span>
+                            </div>
+                            {eq name="$r.adopt" value="1"}
+                            <i class="iconfont icon-caina" title="最佳答案"></i>
+                            {/eq}
+                        </div>
+                        <div class="detail-body jieda-body photos">
+                            {$r.content}
+                        </div>
+                        <div class="jieda-reply">
+                            <span class="jieda-zan
+                            {present name='$r.zan'}zanok{/present}
+" type="zan">
+                              <i class="iconfont icon-zan"></i>
+                              <em>{$r.like}</em>
+                            </span>
+                            <span type="reply">
+                              <i class="iconfont icon-svgmoban53"></i>
+                              回复
+                            </span>
+                            {present name="user"}
+                            <div class="jieda-admin">
+                                {eq name="$user.id" value="$r.user_id"}
+                                    <span type="edit">编辑</span>
+                                    {eq name="$user.id" value="333"}
+                                    <span type="del">删除</span>
+                                    {/eq}
+                                {/eq}
+                                {eq name="$user.id" value="$post.user_id"}
+                                    {eq name="$post.reply_accept" value="0"}
+                                     <span class="jieda-accept" type="accept">采纳</span>
+                                    {/eq}
+                                {/eq}
+                            </div>
+                            {/present}
+                        </div>
+                    </li>
+                    {/volist}
+                    {else /}
+                    <!-- 无数据时 -->
+                     <li class="fly-none">消灭零回复</li>
+                    {/present}
+                </ul>
+
+                <div class="layui-form layui-form-pane">
+                    <form action="/post/reply/" method="post">
+                        <div class="layui-form-item layui-form-text">
+                            <a name="comment"></a>
+                            <div class="layui-input-block">
+                                <textarea id="L_content" name="content" required lay-verify="required" placeholder="请输入内容"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <input type="hidden" name="post_id" value="{$post.id}">
+                            <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <dl class="fly-panel fly-list-one">
+                <dt class="fly-panel-title">本周热议</dt>
+                {present name="hot"}
+                {volist name="hot" id="hot"}
+                <dd>
+                    <a href="{:url('post/detail',['id'=>$hot.id])}">{$hot.title}</a>
+                    <span><i class="iconfont icon-pinglun1"></i> {$hot.reply}</span>
+                </dd>
+                {/volist}
+                {else/}
+                <!-- 无数据时 -->
+                <div class="fly-none">没有相关数据</div>
+                {/present}
+            </dl>
+
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    黄金赞助商
+                </div>
+                <div class="fly-panel-main">
+                    <a href="https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=168b195fd54443f3ac202735c06ac1dc&from=console" target="_blank" class="fly-zanzhu" style="background-color: #0c1234;">腾讯云 - 新用户大礼包</a>
+                </div>
+            </div>
+
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    鸣谢
+                </div>
+                <div class="fly-panel-main">
+                    <a href="http://layui.com/" target="_blank" class="fly-zanzhu" style="background-color: #009688;">LayUI - 经典模块化前端框架</a>
+                </div>
+                <div class="fly-panel-main">
+                    <a href="http://www.thinkphp.cn/" target="_blank" class="fly-zanzhu" style="background-color: #6fb737;">ThinkPHP - 中文最佳实践PHP框架</a>
+                </div>
+            </div>
+
+            {if condition="config('sns_wechat_qrcode') != ''"}
+            <div class="fly-panel" style="padding: 20px 0; text-align: center;">
+                <img src="{:get_file_path(config('sns_wechat_qrcode'))}" style="max-width: 100%;" alt="关注公众号">
+                <p style="position: relative; color: #666;">{:config('sns_wechat_qrcode_tips')}</p>
+            </div>
+            {/if}
+
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="layui-script"}
+<script>
+  layui.cache.page = 'jie';
+  layui.config({
+    version: "3.1.6"
+    ,base: '/static/home/res/mods/'
+  }).extend({
+    fly: 'index'
+  }).use(['fly', 'face'], function(){
+    var $ = layui.$
+      ,fly = layui.fly;
+    //如果你是采用模版自带的编辑器，你需要开启以下语句来解析。
+
+    $('.detail-body').each(function(){
+      var othis = $(this), html = othis.html();
+      othis.html(fly.content(html));
+    });
+
+  });
+</script>
+<script>
+    function showCodeImg(path) {
+      layer.open({
+        type: 1,
+        title: false,
+        closeBtn: 0,
+        shadeClose: true,
+        skin: '',
+        content: '<img width="300" src="'+path+'">'
+      });
+    }
+</script>
+{/block}

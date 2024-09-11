@@ -1,0 +1,81 @@
+{extend name="layout" /}
+
+{block name="main"}
+
+<div class="layui-container fly-marginTop fly-user-main">
+
+    {include file="common/user-nav"}
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;">
+            <button class="layui-btn layui-btn-danger" id="LAY_delallmsg">清空全部消息</button>
+            <div  id="LAY_minemsg" style="margin-top: 10px;">
+                {present name="msg"}
+                <ul class="mine-msg">
+                    {volist name="msg" id="msg"}
+                    <li data-id="{$msg.id}">
+                        {eq name="msg.from" value="0"}
+                        <!--系统消息-->
+                        <blockquote class="layui-elem-quote">
+                            系统消息：{$msg.content}
+                        </blockquote>
+                        {else /}
+                        <!--互动消息-->
+                            {switch name="msg.type"}
+                                {case value="give"}
+                                    <blockquote class="layui-elem-quote">
+                                        <a href="{:url('user/home',['id'=>$msg.from])}" target="_blank"><cite>{$msg.nickname}</cite></a>
+                                        {$msg.content}
+                                    </blockquote>
+                                {/case}
+                                {case value="reply"}
+                                    <blockquote class="layui-elem-quote">
+                                        <a href="{:url('user/home',['id'=>$msg.from])}" target="_blank"><cite>{$msg.nickname}</cite></a>在<a target="_blank" href="{:url('post/msgToReply',['id'=>$msg.id])}"><cite>{$msg.title}</cite></a>
+                                        {eq name="msg.content" value=""}
+                                        回复了你
+                                        {else /}
+                                        {$msg.content}
+                                        {/eq}
+                                    </blockquote>
+                                {/case}
+                                {default/}
+                                    <blockquote class="layui-elem-quote">
+                                        <a href="{:url('user/home',['id'=>$msg.from])}" target="_blank"><cite>{$msg.nickname}</cite></a>在<a target="_blank" href="{:url('post/detail',['id'=>$msg.post_id])}"><cite>{$msg.title}</cite></a>
+                                        {eq name="msg.content" value=""}
+                                        回复了你
+                                        {else /}
+                                        {$msg.content}
+                                        {/eq}
+                                    </blockquote>
+                            {/switch}
+                        {/eq}
+                        <p><span>{:tran_time($msg.create_time)}</span><a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>
+                    </li>
+                    {/volist}
+                </ul>
+                {else/}
+                <div class="fly-none">您暂时没有最新消息</div>
+                {/present}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{/block}
+
+{block name="script"}
+{include file="common/user-script"}
+{/block}

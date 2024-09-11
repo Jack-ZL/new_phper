@@ -1,0 +1,104 @@
+{extend name="layout" /}
+
+{block name="title-start"}在线时间戳转换 | {/block}
+
+{block name="main"}
+
+<div class="fly-main" style="overflow: hidden;padding-top:100px;background: #ffffff">
+
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">时间戳</label>
+            <div class="layui-input-block">
+                <input type="text" id="timestamp" lay-verify="required" name="text" autocomplete="off" placeholder="{:time()}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="sub()" lay-submit="" lay-filter="demo1">转</button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标准时间</label>
+            <div class="layui-input-block">
+                <input type="text" id="val" name="text" placeholder="{:date('Y-m-d H:i:s')}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <hr>
+    <br>
+    <br>
+    <br>
+
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标准时间</label>
+            <div class="layui-input-block">
+                <input type="text" id="str" lay-verify="required" name="text" placeholder="{:date('Y-m-d H:i:s')}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="change()" lay-submit="" lay-filter="demo2">转</button>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">时间戳</label>
+            <div class="layui-input-block">
+                <input type="text" id="changeres" name="text" autocomplete="off" placeholder="{:time()}" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{/block}
+
+{block name="script"}
+<script>
+  layui.use('laydate', function(){
+    var laydate = layui.laydate;
+
+    //执行一个laydate实例
+    laydate.render({
+      elem: '#str' //指定元素
+      ,type: 'datetime'
+    });
+  });
+
+    function sub() {
+      var timestamp = $("#timestamp").val();
+      if (timestamp === ''){
+        return false
+      }
+      $.ajax({
+        url: "{:url('tool/timestamp')}",
+        data: {timestamp:timestamp},
+        type: "post",
+        success: function (res) {
+          $("#val").val(res.data)
+        }
+      })
+    }
+
+  function change() {
+    var str = $("#str").val();
+    if (str === ''){
+      return false
+    }
+    $.ajax({
+      url: "{:url('tool/timestamp')}",
+      data: {str:str},
+      type: "post",
+      success: function (res) {
+        $("#changeres").val(res.data)
+      }
+    })
+  }
+</script>
+{/block}

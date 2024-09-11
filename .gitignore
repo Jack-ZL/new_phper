@@ -1,0 +1,13 @@
+.idea
+composer.lock
+/runtime/
+/.settings/
+/composer.lock
+/.buildpath
+/.project
+*.log
+/vendor/
+/thinkphp/
+/public/static/*
+/public/uploads/*
+/data/*

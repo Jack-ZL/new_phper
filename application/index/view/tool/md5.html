@@ -1,0 +1,53 @@
+{extend name="layout" /}
+
+{block name="title-start"}MD5在线加密 | {/block}
+
+{block name="main"}
+
+<div class="fly-main" style="overflow: hidden;padding-top:100px;background: #ffffff">
+
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">初始值</label>
+            <div class="layui-input-block">
+                <input type="text" id="text" lay-verify="required" name="text" autocomplete="off" placeholder="请输入要加密的字符串" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="sub()" lay-submit="" lay-filter="demo1">加密</button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">加密值</label>
+            <div class="layui-input-block">
+                <input type="text" id="val" lay-verify="required" name="text" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{/block}
+
+{block name="script"}
+<script>
+    function sub() {
+      var text = $("#text").val();
+      if (text === ''){
+        return false
+      }
+      $.ajax({
+        url: "{:url('tool/md5')}",
+        data: {text:text},
+        type: "post",
+        success: function (res) {
+          $("#val").val(res.data)
+        }
+      })
+    }
+</script>
+{/block}

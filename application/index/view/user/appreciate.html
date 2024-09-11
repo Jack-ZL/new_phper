@@ -1,0 +1,92 @@
+{extend name="layout" /}
+
+{block name='title-start'}赞赏码展示申请 | {/block}
+
+{block name="style"}
+<style>
+    .fly-home img {
+        width: 200px;
+        height: 200px;
+        border-radius: 0;
+    }
+    .status{
+        font-size: 16px;
+        padding-top: 20px;
+    }
+    .status span{
+        font-size: 18px;
+        font-weight: 500;
+        color: #FF5722;
+    }
+</style>
+{/block}
+
+{block name="main"}
+
+<div class="fly-home fly-panel" style="padding: 150px 0">
+    {present name="status"}
+        <img width="200" src="{:get_file_path($user.appreciate_code)}">
+        {eq name="status" value="2"}
+            <p class="status">当前状态：<span>审核中</span></p>
+        {else/}
+            <p class="status">当前状态：<span>已审核通过</span></p>
+            <p>暂不支持修改。如确实需要修改，请联系管理员</p>
+        {/eq}
+    {else/}
+        {present name="can"}
+            <div id="codeImg">
+
+            </div>
+
+            <p class="status showAfterSuccess" style="display: none">当前状态：<span>审核中</span></p>
+
+            <div class="fly-sns hideAfterSuccess" data-user="">
+                <a href="javascript:;" id="apply" data-u="{$user.id}" class="layui-btn layui-btn-normal">上传赞赏码</a>
+                <p class="fly-home-sign">只能上传微信或支付宝赞赏码</p>
+            </div>
+        {else/}
+            <p class="fly-home-sign">在分享区发表过至少 3 篇文章，才能申请哦~</p>
+        {/present}
+    {/present}
+</div>
+
+{/block}
+
+{block name="script"}
+<script>
+  layui.use('upload', function(){
+    var upload = layui.upload;
+
+    //执行实例
+    var uploadInst = upload.render({
+      elem: '#apply' //绑定元素
+      ,url: '/attachment/upload' //上传接口
+      ,done: function(res){
+        //上传完毕回调
+        if (res.code == 1){
+          var loading = layer.load(1);
+          $.ajax({
+            url: "{:url('user/appreciate')}",
+            data:{id:res.id},
+            complete: function(){
+              layer.close(loading);
+            },
+            success: function (res_) {
+              $("#codeImg").html('<img width="200" src="'+res.path+'">');
+              layer.alert(res_.msg);
+              $(".showAfterSuccess").show();
+              $(".hideAfterSuccess").hide();
+            },
+            error: function () {
+              layer.msg('请求异常')
+            }
+          })
+        }
+      }
+      ,error: function(){
+        //请求异常回调
+      }
+    });
+  });
+</script>
+{/block}

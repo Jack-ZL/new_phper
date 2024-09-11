@@ -1,0 +1,31 @@
+<div class="fly-panel fly-column">
+    <div class="layui-container">
+        <ul class="layui-clear">
+            <li class="layui-hide-xs {eq name='navActive' value='home'}layui-this{/eq}"><a href="/">首页</a></li>
+            {volist name="column" id="column"}
+            <li class="{eq name='navActive' value='$column.name'}layui-this{/eq}">
+                <a href="{:url('index/column',['name'=>$column.name])}">{$column.title}
+                    {eq name="column.dot" value="1"}
+                    <span class="layui-badge-dot"></span>
+                    {/eq}
+                </a>
+            </li>
+            {/volist}
+            {present name="user"}
+            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
+
+            <!-- 用户登入后显示 -->
+            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="{:url('user/index')}">我发表的贴</a></li>
+            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="{:url('user/index')}#collection">我收藏的贴</a></li>
+            {/present}
+        </ul>
+
+        <div class="fly-column-right layui-hide-xs">
+            <!--<span class="fly-search"><i class="layui-icon"></i></span>-->
+            <a href="{:url('post/add')}" class="layui-btn">发表新帖</a>
+        </div>
+        <div class="layui-hide-sm layui-show-xs-block" style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
+            <a href="{:url('post/add')}" class="layui-btn">发表新帖</a>
+        </div>
+    </div>
+</div>

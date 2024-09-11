@@ -1,0 +1,65 @@
+{extend name="layout" /}
+
+{block name="main"}
+
+<div class="layui-container fly-marginTop fly-user-main">
+
+    {include file="common/user-nav"}
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+
+    <div class="fly-panel fly-panel-user" pad20>
+
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title" id="LAY_mine">
+                <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>{:count($my_post)}</span>）</li>
+                <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span>{:count($collection_post)}</span>）</li>
+            </ul>
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <ul class="mine-view jie-row">
+                        {present name="my_post"}
+                        {volist name="my_post" id="mp"}
+                        <li>
+                            <a class="jie-title" href="{:url('post/detail',['id'=>$mp.id])}" target="_blank">{$mp.title}</a>
+                            <i>{:date('Y-m-d H:i:s',$mp.create_time)}</i>
+                            <a class="mine-edit" href="{:url('post/edit',['id'=>$mp.id])}">编辑</a>
+                            <em>{$mp.view}阅/{$mp.reply}答</em>
+                        </li>
+                        {/volist}
+                        {/present}
+                    </ul>
+                    <div id="LAY_page"></div>
+                </div>
+                <div class="layui-tab-item">
+                    <ul class="mine-view jie-row">
+                        {present name="collection_post"}
+                        {volist name="collection_post" id="cp"}
+                        <li>
+                            <a class="jie-title" href="{:url('post/detail',['id'=>$cp.post_id])}" target="_blank">{$cp.title}</a>
+                            <i>收藏于{:tran_time($cp.time)}</i>
+                        </li>
+                        {/volist}
+                        {/present}
+                    </ul>
+                    <div id="LAY_page1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+{include file="common/user-script"}
+{/block}

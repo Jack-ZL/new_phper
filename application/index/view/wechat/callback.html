@@ -1,0 +1,51 @@
+{extend name="layout" /}
+
+{block name="main"}
+<div class="layui-container fly-marginTop">
+  <div class="fly-panel fly-panel-user" pad20>
+    <div class="layui-tab layui-tab-brief" lay-filter="user">
+      <ul class="layui-tab-title">
+        <li class="layui-this">绑定账号</li>
+        <li><a href="{:url('user/reg')}">注册</a></li>
+      </ul>
+      <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+        <div class="layui-tab-item layui-show">
+          <div class="layui-form layui-form-pane">
+            <form method="post" action="{:url('wechat/bindaccount')}">
+              <input type="hidden" name="openid" value="{$openid}">
+              <div class="layui-form-item">
+                <label for="L_account" class="layui-form-label">手机/邮箱</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="L_account" name="account" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux"></div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_pass" class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="L_pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_imagecode" class="layui-form-label">图形码</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="L_imagecode" name="imagecode" required="" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid" style="padding: 0!important;">
+                  <img style="cursor: pointer" src="{:captcha_src()}" onclick="this.src='{:captcha_src()}?'+Math.random()" id="imageCode" class="fly-imagecode">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <button class="layui-btn" lay-filter="*" lay-submit>立即绑定</button>
+                <span style="padding-left:20px;">
+                  <a href="forget.html">忘记密码？</a>
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{/block}

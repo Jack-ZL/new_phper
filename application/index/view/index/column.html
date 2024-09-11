@@ -1,0 +1,140 @@
+{extend name="layout" /}
+
+{block name="style"}
+<style>
+    .pagination{
+        display: inline-block;
+        margin: 20px 0;
+        border: 1px solid #1E9FFF;
+        border-right: none;
+        border-bottom: none;
+        font-size: 0;
+    }
+    .pagination li{
+        display: inline-block;
+    }
+    .pagination li * {
+        display: inline-block;
+        padding: 0 20px;
+        line-height: 36px;
+        border-right: 1px solid #1E9FFF;
+        border-bottom: 1px solid #1E9FFF;
+        font-size: 14px;
+    }
+    .pagination .active {
+        background-color: #1E9FFF;
+        color: #fff;
+    }
+</style>
+{/block}
+
+{block name="main"}
+
+{include file="common/column" /}
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8">
+            <div class="fly-panel" style="margin-bottom: 0;">
+
+                <div class="fly-panel-title fly-filter">
+                    <a href="{:url('index/column',['name'=>$navActive])}" class="{eq name='mapActive' value=''}layui-this{/eq}">综合</a>
+                    <span class="fly-mid"></span>
+                    <a href="{:url('index/column',['name'=>$navActive,'map'=>'unsolved'])}" class="{eq name='mapActive' value='unsolved'}layui-this{/eq}">未结</a>
+                    <span class="fly-mid"></span>
+                    <a href="{:url('index/column',['name'=>$navActive,'map'=>'solved'])}" class="{eq name='mapActive' value='solved'}layui-this{/eq}">已结</a>
+                    <span class="fly-mid"></span>
+                    <a href="{:url('index/column',['name'=>$navActive,'map'=>'essence'])}" class="{eq name='mapActive' value='essence'}layui-this{/eq}">精华</a>
+                    <!--<span class="fly-filter-right layui-hide-xs">-->
+                        <!--<a href="" class="layui-this">按最新</a>-->
+                        <!--<span class="fly-mid"></span>-->
+                        <!--<a href="">按热议</a>-->
+                    <!--</span>-->
+                </div>
+
+                {present name="post"}
+                <ul class="fly-list">
+                    {volist name="post" id="post"}
+                    <li>
+                        <a href="{:url('user/home',['id'=>$post.user_id])}" class="fly-avatar">
+                            <img src="{eq name='$post.avatar' value='0'}/static/home/img/avatar/{$post.avatar_default}.png{else}{:get_file_path($post.avatar)}{/eq}" alt="{$post.nickname}">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">{$post.column_title}</a>
+                            <a href="{:url('post/detail',['id'=>$post.id])}">{$post.title}</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <a href="{:url('user/home',['id'=>$post.user_id])}" link>
+                                <cite>{$post.nickname}</cite>
+                                <!--
+                                <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                                <i class="layui-badge fly-badge-vip">VIP3</i>
+                                -->
+                            </a>
+                            <span>{:tran_time($post.create_time)}</span>
+
+                            <span class="fly-list-kiss layui-hide-xs" title="悬赏{:config('sns_score_name')}">{:config('sns_socre_name')} {$post.reward}</span>
+                            {eq name="$post.solved" value="1"}
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                            {/eq}
+                            <span class="fly-list-nums">
+                                <i class="iconfont icon-pinglun1" title="回答"></i> {$post.reply}
+                            </span>
+                        </div>
+                        <div class="fly-list-badge">
+                            {eq name="$post.top" value="1"}
+                            <span class="layui-badge layui-bg-black">置顶</span>
+                            {/eq}
+                            {eq name="$post.essence" value="1"}
+                            <span class="layui-badge layui-bg-red">精帖</span>
+                            {/eq}
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+                {else /}
+                 <div class="fly-none">空空如也</div>
+                {/present}
+                <div style="text-align: center">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <dl class="fly-panel fly-list-one">
+                <dt class="fly-panel-title">本周热议</dt>
+                {present name="hot"}
+                {volist name="hot" id="hot"}
+                <dd>
+                    <a href="{:url('post/detail',['id'=>$hot.id])}">{$hot.title}</a>
+                    <span><i class="iconfont icon-pinglun1"></i> {$hot.reply}</span>
+                </dd>
+                {/volist}
+                {else/}
+                <!-- 无数据时 -->
+                <div class="fly-none">没有相关数据</div>
+                {/present}
+            </dl>
+
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    铂金赞助商
+                </div>
+                <div class="fly-panel-main">
+                    <a href="https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=168b195fd54443f3ac202735c06ac1dc&from=console" target="_blank" class="fly-zanzhu" style="background-color: #0c1234;">腾讯云 - 新用户大礼包</a>
+                </div>
+            </div>
+            {if condition="config('sns_wechat_qrcode') != ''"}
+            <div class="fly-panel" style="padding: 20px 0; text-align: center;">
+                <img src="{:get_file_path(config('sns_wechat_qrcode'))}" style="max-width: 100%;" alt="关注公众号">
+                <p style="position: relative; color: #666;">{:config('sns_wechat_qrcode_tips')}</p>
+            </div>
+            {/if}
+            {include file="common/link" /}
+
+        </div>
+    </div>
+</div>
+
+{/block}

@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{block name="title"}{block name="title-start"}{/block}{:config('web_site_title')} - {:config('web_site_slogan')}{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="{block name='keywords'}{:config('web_site_keywords')}{/block}">
+    <meta name="description" content="{block name='description'}{:config('web_site_description')}{/block}">
+    <link rel="stylesheet" href="/static/home/res/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/home/res/css/global.css">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <style>
+        .layui-btn{
+            background-color: #1E9FFF;
+        }
+        .layui-btn-disabled{
+            background-color: #fbfbfb;
+        }
+        .fly-link:hover {
+            color: #01AAED;
+        }
+        .fly-column ul li.layui-this a, .fly-filter a.layui-this {
+            color: #01AAED;
+        }
+        .fly-list li h2 .layui-badge{
+            border-color: #01AAED;
+            color: #01AAED;
+        }
+        a:hover {
+            color: #01AAED;
+        }
+        .laypage-main * {
+            border-right: 1px solid #1E9FFF;
+            border-bottom: 1px solid #1E9FFF;
+        }
+        .layui-tab-brief>.layui-tab-title .layui-this{
+            color: #1E9FFF;
+        }
+        .layui-tab-brief>.layui-tab-more li.layui-this:after, .layui-tab-brief>.layui-tab-title .layui-this:after {
+            border-bottom: 2px solid #1E9FFF;
+        }
+        .layui-form-radio i:hover, .layui-form-radioed i {
+            color: #1E9FFF;
+        }
+        .layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this>a, .layui-nav-tree .layui-this>a:hover {
+            background-color: #1E9FFF;
+        }
+        .layui-nav-tree .layui-nav-bar {
+            background-color: #1E9FFF;
+        }
+        .layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after {
+            background-color: #01AAED;
+        }
+        .layui-nav .layui-nav-child dd.layui-this a, .layui-nav-child dd.layui-this {
+            background-color: #1E9FFF!important;
+            color: #ffffff!important;
+        }
+        .layui-form-select dl dd.layui-this {
+            background-color: #1E9FFF;
+        }
+        .fly-edit span {
+            cursor: pointer;
+            padding: 0 10px;
+            line-height: 38px;
+            color: #1E9FFF;
+        }
+        .fly-edit span:hover {
+            color: #1E9FFF;
+        }
+    </style>
+    {block name="style"}{/block}
+</head>
+<body>
+
+{block name="header"}
+<div class="fly-header layui-bg-black" style="background: #0c1234;border: none">
+    <div class="layui-container">
+        <a class="fly-logo" href="/" style="font-size: 30px;color: rgba(255,255,255,.9);;line-height: 60px;top:0;left: 15px;">
+            <!--NewPHPer-->
+            <img src="__HOME_IMG__/logo.png" alt="{:config('web_site_title')}">
+        </a>
+        <ul class="layui-nav fly-nav layui-hide-xs">
+            <li class="layui-nav-item {eq name='$Request.controller' value='Index'}layui-this{/eq}">
+                <a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>
+            </li>
+            <li class="layui-nav-item {eq name='$Request.controller' value='Tool'}layui-this{/eq}">
+                <a href="/tool.html"><i class="layui-icon layui-icon-app"></i>工具</a>
+            </li>
+        </ul>
+
+        <ul class="layui-nav fly-nav-user">
+
+            {present name="user"}
+            <!-- 登入后的状态 -->
+            <li class="layui-nav-item">
+                <a class="fly-nav-avatar" href="javascript:;">
+                    <cite class="layui-hide-xs">{$user.nickname}</cite>
+                    {neq name="$user.authentication" value=""}
+                    <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：{$user.authentication}"></i>
+                    {/neq}
+                    <!--<i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>-->
+                    <img src="{eq name='$user.avatar' value='0'}/static/home/img/avatar/{$user.avatar_default}.png{else/}{:get_file_path($user.avatar)}{/eq}">
+                </a>
+                <dl class="layui-nav-child" style="text-align: center">
+                    <dd>
+                        <a href="{:url('user/home',['id'=>$user['id']])}">
+                            我的主页
+                        </a>
+                    </dd>
+                    <dd><a href="{:url('user/message')}">我的消息</a></dd>
+                    <dd><a href="{:url('user/draft')}">我的草稿</a></dd>
+                    <dd><a href="{:url('user/set')}">基本设置</a></dd>
+                    <hr style="margin: 5px 0;">
+                    <dd><a href="{:url('user/logout')}" style="text-align: center;">退出</a></dd>
+                </dl>
+            </li>
+            {else /}
+            <!-- 未登入的状态 -->
+            <li class="layui-nav-item">
+              <a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>
+            </li>
+            <li class="layui-nav-item">
+              <a href="{:url('user/login')}">登入</a>
+            </li>
+            <li class="layui-nav-item">
+              <a href="{:url('user/reg')}">注册</a>
+            </li>
+            <!--<li class="layui-nav-item layui-hide-xs">-->
+              <!--<a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>-->
+            <!--</li>-->
+            <!--<li class="layui-nav-item layui-hide-xs">-->
+              <!--<a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" title="微博登入" class="iconfont icon-weibo"></a>-->
+            <!--</li>-->
+            {/present}
+        </ul>
+    </div>
+</div>
+{/block}
+{block name="main"}
+{/block}
+{block name="footer"}
+<div class="fly-footer">
+    <p>Copyright © 2018 <a href="https://newphper.com">NewPHPer</a></p>
+</div>
+{/block}
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/static/home/res/layui/layui.js"></script>
+<script>
+    layui.cache.score_name="{:config('sns_score_name')}";
+</script>
+{present name="user"}
+<script>
+  layui.cache.user = {
+    username: '{$user.nickname}'
+    ,uid: {$user.id}
+    ,avatar: "{eq name='$user.avatar' value='0'}/static/home/img/avatar/{$user.avatar_default}.png{else/}{:get_file_path($user.avatar)}{/eq}"
+    ,experience: {$user.score}
+    ,sex: '{eq name="$user.gender" value="0"}男{else/}女{/eq}'
+  };
+</script>
+{else/}
+<script>
+  layui.cache.user = {
+    username: '游客'
+    ,uid: -1
+    ,avatar: '/static/home/res/images/avatar/00.jpg'
+    ,experience: 83
+    ,sex: '男'
+  };
+</script>
+{/present}
+{block name="layui-script"}
+<script>
+  layui.config({
+    version: "3.1.6"
+    ,base: '/static/home/res/mods/'
+  }).extend({
+    fly: 'index'
+  }).use('fly');
+</script>
+{/block}
+{block name="script"}{/block}
+<!--TongJi-->
+{:config('web_site_statistics')}
+</body>
+</html>

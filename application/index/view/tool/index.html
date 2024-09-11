@@ -1,0 +1,30 @@
+{extend name="layout" /}
+
+{block name="title-start"}工具 | {/block}
+
+{block name="main"}
+
+<div class="layui-container fly-marginTop" style="overflow: hidden;">
+
+    <ul class="fly-case-list">
+        <li data-id="123">
+            <a class="fly-case-img" href="{:url('tool/md5')}" >
+                <h2>MD5 加密</h2>
+                <p class="fly-case-desc">MD5，一种被广泛使用的密码散列函数，可以产生出一个128位（16字节）的散列值（hash value），用于确保信息传输完整。</p>
+            </a>
+        </li>
+
+        <li data-id="123">
+            <a class="fly-case-img" href="{:url('tool/timestamp')}" >
+                <h2>时间戳转换</h2>
+                <p class="fly-case-desc">unix时间戳是从1970年1月1日（UTC/GMT的午夜）开始所经过的秒数，不考虑闰秒。</p>
+            </a>
+        </li>
+
+    </ul>
+
+
+</div>
+
+
+{/block}

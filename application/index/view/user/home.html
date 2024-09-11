@@ -1,0 +1,102 @@
+{extend name="layout" /}
+
+{block name="title"}{$u.nickname}的主页 - {:config('web_site_title')}{/block}
+
+{block name='keywords'}{$u.nickname},{:config('web_site_keywords')}{/block}
+
+{block name="main"}
+
+<div class="fly-home fly-panel" style="background-image: url();">
+    <img src="{eq name='$u.avatar' value='0'}/static/home/img/avatar/{$u.avatar_default}.png{else/}{:get_file_path($u.avatar)}{/eq}" alt="贤心">
+    {neq name="$u.authentication" value=""}
+    <i class="iconfont icon-renzheng" title="社区认证：{$u.authentication}"></i>
+    {/neq}
+    <h1>
+        {$u.nickname}
+        {eq name='$u.gender' value='0'}
+        <i class="iconfont icon-nan"></i>
+        {/eq}
+        {eq name='$u.gender' value='1'}
+        <i class="iconfont icon-nv"></i>
+        {/eq}
+        <!--<i class="layui-badge fly-badge-vip">VIP3</i>-->
+        <!--
+        <span style="color:#c00;">（管理员）</span>
+        <span style="color:#5FB878;">（社区之光）</span>
+        <span>（该号已被封）</span>
+        -->
+    </h1>
+
+    {neq name="$u.authentication" value=""}
+    <p style="padding: 10px 0; color: #5FB878;">认证信息： {$u.authentication}</p>
+    {/neq}
+
+    <p class="fly-home-info">
+        <i class="iconfont icon-kiss" title="{:config('sns_score_name')}"></i><span style="color: #FF7200;"><span id="HOME-score" style="color: #FF7200;">{$u.score}</span> {:config('sns_score_name')}</span>
+        <i class="iconfont icon-shijian"></i><span>{:date('Y-m-d',$u.create_time)} 加入</span>
+        {neq name="$u.city" value=""}
+        <i class="iconfont icon-chengshi"></i><span>来自{$u.city}</span>
+        {/neq}
+    </p>
+
+    <p class="fly-home-sign">（{eq name="$u.sign" value=""}这个人懒得留下签名{else/}{$u.sign}{/eq}）</p>
+
+    <div class="fly-sns" data-user="">
+        <!--<a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" data-type="addFriend">加为好友</a>-->
+        <!--<a href="javascript:;" class="layui-btn layui-btn-normal fly-imActive" data-type="chat">发起会话</a>-->
+        <a href="javascript:;" id="give-score" data-u="{$u.id}" class="layui-btn layui-btn-normal">赠送 {:config('sns_score_name')}</a>
+    </div>
+
+</div>
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6 fly-home-jie">
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">{$u.nickname} 最近的提问</h3>
+                <ul class="jie-row">
+                    {present name="post"}
+                    {volist name="post" id="post"}
+                    <li>
+                        {eq name="post.essence" value="1"}
+                        <span class="fly-jing">精</span>
+                        {/eq}
+                        <a href="{:url('post/detail',['id'=>$post.id])}" class="jie-title"> {$post.title}</a>
+                        <i>{:tran_time($post.create_time)}</i>
+                        <em class="layui-hide-xs">{$post.view}阅/{$post.reply}答</em>
+                    </li>
+                    {/volist}
+                    {else/}
+                     <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">空空如也</i></div>
+                    {/present}
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-col-md6 fly-home-da">
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">{$u.nickname} 最近的回答</h3>
+                <ul class="home-jieda">
+                    {present name="reply"}
+                    {volist name="reply" id="r"}
+                    <li>
+                        <p>
+                            <span>{:tran_time($r.time)}</span>
+                            在<a href="{:url('post/detail',['id'=>$r.post_id])}">{$r.title}</a>中回答：
+                        </p>
+                        <div class="home-dacontent">
+                           {$r.content}
+                        </div>
+                    </li>
+                    {/volist}
+                    {else /}
+                     <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>空空如也</span></div>
+                    {/present}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{/block}

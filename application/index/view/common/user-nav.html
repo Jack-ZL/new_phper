@@ -1,0 +1,32 @@
+<ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+    <li class="layui-nav-item">
+        <a href="{:url('user/home',['id'=>$user['id']])}">
+            <i class="layui-icon">&#xe609;</i>
+            我的主页
+        </a>
+    </li>
+    <li class="layui-nav-item {eq name='$Request.action' value='index'}layui-this{/eq}">
+        <a href="{:url('user/index')}">
+            <i class="layui-icon">&#xe612;</i>
+            用户中心
+        </a>
+    </li>
+    <li class="layui-nav-item {eq name='$Request.action' value='draft'}layui-this{/eq}">
+        <a href="{:url('user/draft')}">
+            <i class="layui-icon">&#xe6b2;</i>
+            草稿箱
+        </a>
+    </li>
+    <li class="layui-nav-item {eq name='$Request.action' value='set'}layui-this{/eq}">
+        <a href="{:url('user/set')}">
+            <i class="layui-icon">&#xe620;</i>
+            基本设置
+        </a>
+    </li>
+    <li class="layui-nav-item {eq name='$Request.action' value='message'}layui-this{/eq}">
+        <a href="{:url('user/message')}">
+            <i class="layui-icon">&#xe611;</i>
+            我的消息
+        </a>
+    </li>
+</ul>

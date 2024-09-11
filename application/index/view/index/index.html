@@ -1,0 +1,222 @@
+{extend name="layout" /}
+
+{block name="main"}
+
+{include file="common/column" /}
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8">
+            {present name="top"}
+            <div class="fly-panel">
+                <div class="fly-panel-title fly-filter">
+                    <a>置顶</a>
+                    <a href="#signin" class="layui-hide-sm layui-show-xs-block fly-right" id="LAY_goSignin" style="color: #FF5722;">去签到</a>
+                </div>
+                <ul class="fly-list">
+                    {volist name="top" id="top"}
+                    <li>
+                        <a href="{:url('user/home',['id'=>$top.user_id])}" class="fly-avatar">
+                            <img src="{eq name='$top.avatar' value='0'}/static/home/img/avatar/{$top.avatar_default}.png{else/}{:get_file_path($top.avatar)}{/eq}" alt="{$top.nickname}">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">{$top.column_title}</a>
+                            <a href="{:url('post/detail',['id'=>$top.id])}">{$top.title}</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <a href="{:url('user/home',['id'=>$top.user_id])}" link>
+                                <cite>{$top.nickname}</cite>
+                                {neq name="$top.authentication" value=""}
+                                <i class="iconfont icon-renzheng" title="认证信息：{$top.authentication}"></i>
+                                {/neq}
+                                <!--<i class="layui-badge fly-badge-vip">VIP3</i>-->
+                            </a>
+                            <span>{:tran_time($top.create_time)}</span>
+
+                            <span class="fly-list-kiss layui-hide-xs" title="悬赏{:config('sns_score_name')}">{:config('sns_score_name')} {$top.reward}</span>
+                            {eq name="top.solved" value="1"}
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                            {/eq}
+                            <span class="fly-list-nums">
+                <i class="iconfont icon-pinglun1" title="回答"></i> {$top.reply}
+              </span>
+                        </div>
+                        <div class="fly-list-badge">
+                            {eq name="$top.top" value="1"}
+                            <span class="layui-badge layui-bg-black">置顶</span>
+                            {/eq}
+                            {eq name="$top.essence" value="1"}
+                            <span class="layui-badge layui-bg-red">精帖</span>
+                            {/eq}
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+            {/present}
+            <div class="fly-panel" style="margin-bottom: 0;">
+
+                <div class="fly-panel-title fly-filter">
+                    <a href="{:url('index/column',['name'=>'all'])}" class="layui-this">综合</a>
+                    <span class="fly-mid"></span>
+                    <a href="{:url('index/column',['name'=>'all','map'=>'unsolved'])}">未结</a>
+                    <span class="fly-mid"></span>
+                    <a href="{:url('index/column',['name'=>'all','map'=>'solved'])}">已结</a>
+                    <span class="fly-mid"></span>
+                    <a href="{:url('index/column',['name'=>'all','map'=>'essence'])}">精华</a>
+                    <!--<span class="fly-filter-right layui-hide-xs">-->
+                        <!--<a href="" class="layui-this">按最新</a>-->
+                        <!--<span class="fly-mid"></span>-->
+                        <!--<a href="">按热议</a>-->
+                    <!--</span>-->
+                </div>
+
+                <ul class="fly-list">
+                    {volist name="home_post" id="p"}
+                    <li>
+                        <a href="{:url('user/home',['id'=>$p.user_id])}" class="fly-avatar">
+                            <img src="{eq name='p.avatar' value='0'}/static/home/img/avatar/{$p.avatar_default}.png{else/}{:get_file_path($p.avatar)}{/eq}" alt="{$p.nickname}">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">{$p.column_title}</a>
+                            <a href="{:url('post/detail',['id'=>$p.id])}">{$p.title}</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <a href="{:url('user/home',['id'=>$p.user_id])}" link>
+                                <cite>{$p.nickname}</cite>
+                                {neq name="$p.authentication" value=""}
+                                <i class="iconfont icon-renzheng" title="认证信息：{$p.authentication}"></i>
+                                {/neq}
+                                <!--
+                                <i class="layui-badge fly-badge-vip">VIP3</i>
+                                -->
+                            </a>
+                            <span>{:tran_time($p.create_time)}</span>
+
+                            <span class="fly-list-kiss layui-hide-xs" title="悬赏{:config('sns_score_name')}">{:config('sns_score_name')} {$p.reward}</span>
+                            <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
+                            <span class="fly-list-nums">
+                                <i class="iconfont icon-pinglun1" title="回答"></i> {$p.reply}
+                            </span>
+                        </div>
+                        <div class="fly-list-badge">
+                            {eq name="$p.top" value="1"}
+                            <span class="layui-badge layui-bg-black">置顶</span>
+                            {/eq}
+                            {eq name="$p.essence" value="1"}
+                            <span class="layui-badge layui-bg-red">精帖</span>
+                            {/eq}
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+                <div style="text-align: center">
+
+                    <div class="laypage-main">
+                        <a href="{:url('index/column',['name'=>'all'])}" class="laypage-next">更多</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-md4">
+
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">温馨通道</h3>
+                <ul class="fly-panel-main fly-list-static">
+                    <li>
+                        <a href="https://newphper.com/post/373.html">申请在分享区文末展示“赞赏码”</a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="fly-panel fly-signin" id="signin">
+                <div class="fly-panel-title">
+                    签到
+                    <i class="fly-mid"></i>
+                    <a href="javascript:;" class="fly-link" id="LAY_signinHelp">说明</a>
+                    <i class="fly-mid"></i>
+                    <a href="javascript:;" class="fly-link" id="LAY_signinTop">活跃榜<span class="layui-badge-dot"></span></a>
+                    <span class="fly-signin-days">已连续签到<cite>
+                        {$sign_serial_ed}
+                    </cite>天</span>
+                </div>
+                <div class="fly-panel-main fly-signin-main">
+                    {present name="sign_log_today"}
+                    <!-- 已签到状态 -->
+                    <button class="layui-btn layui-btn-disabled">今日已签到</button>
+                    <span>获得了<cite>{$sign_log_today.reward}</cite>{:config('sns_score_name')}</span>
+                    {else/}
+                    <button class="layui-btn layui-btn-danger" id="LAY_signin">今日签到</button>
+                    <span>可获得<cite>{$today_sign_in_reward}</cite>{:config('sns_score_name')}</span>
+                    {/present}
+                </div>
+            </div>
+
+            <div class="fly-panel fly-rank fly-rank-reply" id="LAY_replyRank">
+                <h3 class="fly-panel-title">回贴周榜</h3>
+                <dl>
+                    <i class="layui-icon fly-loading">&#xe63d;</i>
+                </dl>
+            </div>
+
+            <dl class="fly-panel fly-list-one">
+                <dt class="fly-panel-title">本周热议</dt>
+                {if condition="count($hot_week) === 0"}
+                <!-- 无数据时 -->
+                <div class="fly-none">没有相关数据</div>
+                {else /}
+                {volist name="hot_week" id="h"}
+                <dd>
+                    <a href="{:url('post/detail',['id'=>$h.id])}">{$h.title}</a>
+                    <span><i class="iconfont icon-pinglun1"></i> {$h.reply}</span>
+                </dd>
+                {/volist}
+                {/if}
+            </dl>
+
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    钻石赞助商
+                </div>
+                <div class="fly-panel-main">
+                    <a href="https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=168b195fd54443f3ac202735c06ac1dc&from=console" target="_blank" class="fly-zanzhu" style="background-color: #0c1234;">腾讯云 - 新用户大礼包</a>
+                </div>
+            </div>
+
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    鸣谢
+                </div>
+                <div class="fly-panel-main">
+                    <a href="http://layui.com/" target="_blank" class="fly-zanzhu" style="background-color: #009688;">LayUI - 经典模块化前端框架</a>
+                </div>
+                <div class="fly-panel-main">
+                    <a href="http://www.thinkphp.cn/" target="_blank" class="fly-zanzhu" style="background-color: #6fb737;">ThinkPHP - 中文最佳实践PHP框架</a>
+                </div>
+            </div>
+
+            {if condition="config('sns_wechat_qrcode') != ''"}
+            <div class="fly-panel" style="padding: 20px 0; text-align: center;">
+                <img src="{:get_file_path(config('sns_wechat_qrcode'))}" style="max-width: 100%;" alt="关注公众号">
+                <p style="position: relative; color: #666;">{:config('sns_wechat_qrcode_tips')}</p>
+            </div>
+            {/if}
+
+            {include file="common/link" /}
+
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+    window.onload = function () {
+      setTimeout(function () {
+        layui.fly.newmsg()
+      },1000)
+    }
+</script>
+{/block}
